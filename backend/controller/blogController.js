@@ -26,7 +26,7 @@ if(!blog){
 
 //create a new blog
 const createBlog=async(req, res)=>{
-    const{title, desc}= req.body
+    const{title, desc, Image}= req.body
     let emptyFields=[]
     if(!title){
       emptyFields.push('tile')
@@ -34,15 +34,15 @@ const createBlog=async(req, res)=>{
     if(!desc){
       emptyFields.push('description')
     }
-    // if(!Image){
-    //   emptyFields.push('image')
-    // }
+    if(!Image){
+      emptyFields.push('image')
+    }
     if(emptyFields.length>0){
       return res.status(400).json({error:'Please fill in all the details', emptyFields})
     }
     //add doc to db
       try{
-        const blog= await Blog.create({title, desc})
+        const blog= await Blog.create({title, desc, Image})
         res.status(200).json(blog)
       } 
       catch(error){
