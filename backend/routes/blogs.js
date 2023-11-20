@@ -7,12 +7,14 @@ const{
   deleteBlog
 }=require('../controller/blogController')
 
+const requireAuth=require('../middleware/requireAuth')
 const router = express.Router();
-
-
 
 // Get all blogs
 router.get('/', getBlogs);
+
+router.use(requireAuth)
+
 
 // Get a single blog by ID
 router.get('/:id', getBlog);
