@@ -17,3 +17,9 @@
   color:#333;
   text-decoration: none;
   }
+  form.signup, form.login{
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    
+}

@@ -177,9 +177,9 @@ function UserblogComp({ blog }) {
         <Button colorScheme='blue' onClick={handleClick}>
           Delete
         </Button>
-        <Button colorScheme='blue' onClick={() => { setEditedTitle(blog.title); setEditedDesc(blog.desc); }}>
+        {/* <Button colorScheme='blue' onClick={() => { setEditedTitle(blog.title); setEditedDesc(blog.desc); }}>
           Complete Edit
-        </Button>
+        </Button> */}
       </div>
       {error && <div>{error}</div>}
     </div>

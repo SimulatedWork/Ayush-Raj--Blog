@@ -4,6 +4,8 @@ import { Input } from '@chakra-ui/react';
 import { useBlogContext } from '../hooks/useBlogContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import '../pages/Profile.css'
+import { Textarea } from '@chakra-ui/react';
+
 
 function BlogForm() {
   const { dispatch } = useBlogContext();
@@ -115,6 +117,8 @@ function BlogForm() {
             
 
               </div>
+              
+              <div style={{ width: '100%'}}>
               <div className='uplode-text'>
                 <div className='uplode-title'>
 
@@ -125,26 +129,31 @@ function BlogForm() {
                     placeholder="Title"
                     onChange={(e) => setTitle(e.target.value)}
                     value={title}
+                    wrap="soft"
                   />
                 </h3>
                 </div>
                 <div className='uplode-desc'>
 
-                <Input
+                <Textarea
                   required="required"
                   variant="outline"
                   placeholder="Blog description"
                   onChange={(e) => setDesc(e.target.value)}
                   value={desc}
+                  resize="none" // Set resize property to "none" to disable manual resizing by users
                 />
+
                 </div>
 
               </div>
+        
 
-        </div>
         <Button colorScheme="blue" type="submit">
           Submit
         </Button>
+        </div>
+        </div>
         {error && <div>{error}</div>}
       </form>
     </>

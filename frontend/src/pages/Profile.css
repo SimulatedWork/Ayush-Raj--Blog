@@ -1,6 +1,11 @@
 
 .input-form{
 display: flex;
+/* justify-content: center; */
+border: 5px solid black;
+height: auto;
+    width: 100vw;
+
 }
 .uplode-image-div{
 
@@ -9,11 +14,12 @@ display: flex;
 
 }
 .uplode-title{
-
+width: 35%;
 }
-.uplode-desc{
-
+.chakra-textarea{
+height: 150px;
 }
 .uplode-text{
-    
+    padding: 20px 40px 20px 40px;
+    width: 70%;
 }
