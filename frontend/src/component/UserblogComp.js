@@ -5,6 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { Editable, EditableInput, EditablePreview, useEditableControls } from '@chakra-ui/react';
 import { ButtonGroup, Flex, IconButton } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import '../pages/Profile.css'
 
 function UserblogComp({ blog }) {
   const { dispatch } = useBlogContext();
@@ -169,8 +170,11 @@ function UserblogComp({ blog }) {
           onChange={handleDescChange}
           onBlur={handleDescBlur}  // Handle onBlur event for the description
         >
-          <EditablePreview />
-          <Input as={EditableInput} />
+          <div className='edi-prev'>
+
+          <EditablePreview className='desc-prev' />
+          <Input as={EditableInput} className='desc-inp'/>
+          </div>
           <EditableControls field="desc" />
         </Editable>
 

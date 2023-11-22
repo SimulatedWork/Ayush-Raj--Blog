@@ -2,24 +2,87 @@
 .input-form{
 display: flex;
 /* justify-content: center; */
-border: 5px solid black;
+border: 3px solid black;
 height: auto;
-    width: 100vw;
+padding: 10px;
+margin: 20px;
+border-radius: 15px;
 
 }
 .uplode-image-div{
-
+    padding: 20px;
 }
-.uplode-image{
 
+.addPage-input1{
+    width: 40%;
 }
 .uplode-title{
-width: 35%;
+width: 40%;
+padding: 1rem 0 0 1rem;
+
 }
-.chakra-textarea{
-height: 150px;
+.addPage-input1{
+    width: 100%;
+}
+.css-f4wh4y{
+height: 210px !important;
 }
 .uplode-text{
     padding: 20px 40px 20px 40px;
-    width: 70%;
+    width: 80%;
+}
+.uplode-image{
+    padding-bottom: 20px ;
+}
+.uplode-btn{
+    justify-content: end;
+    display: flex;
+    padding: 0 2rem 2rem 2rem;
+    
+}
+.uplode-desc{
+padding: 1rem;
+}
+.desc-prev {
+    width: 90%;
+}
+.desc-inp{
+    min-height: 210px;
+    height: 100%;
+}
+.edi-prev{
+    border: 2px solid rgb(0, 157, 255);
+border-radius: 10px;
+    min-height: 210px;
+margin: 20px;
+
+}
+
+@media (max-width:770px) {
+    .input-form{
+        display: flex;
+        flex-wrap: wrap;
+        
+        }
+        .uplode-text{
+            width: 100%;
+        }
+        .uplode-title{
+            width: 70%;
+        }
+        .uplode-image-div{
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .addPage-lable{
+            display: flex;
+        }
+        .uplode-image{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 }

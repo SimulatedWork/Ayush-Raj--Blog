@@ -23,7 +23,7 @@ function BlogForm() {
   };
 
   useEffect(() => {
-    if (image.length < 1) return;
+    if (image.length < 1) return; 
 
     const uploadImage = async () => {
       const data = new FormData();
@@ -141,17 +141,19 @@ function BlogForm() {
                   placeholder="Blog description"
                   onChange={(e) => setDesc(e.target.value)}
                   value={desc}
-                  resize="none" // Set resize property to "none" to disable manual resizing by users
+                  resize="none"
                 />
 
                 </div>
 
               </div>
         
-
-        <Button colorScheme="blue" type="submit">
-          Submit
-        </Button>
+              <div className='uplode-btn'>
+                
+                <Button colorScheme="blue" type="submit">
+                  Submit
+                </Button>
+              </div>
         </div>
         </div>
         {error && <div>{error}</div>}
