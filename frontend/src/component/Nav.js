@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Tooltip } from '@chakra-ui/react'
+import { Avatar } from '@chakra-ui/react'
 
 function BasicExample() {
   const {logout}= useLogout()
@@ -44,7 +45,9 @@ function BasicExample() {
 
             {user && (
             <div>
-                <span>{user.email}</span>
+                <span>
+               <Avatar name={user.email.split('@')[0]} src='https://bit.ly/broken-link' />
+                </span>
                 <Button colorScheme='blue' variant='outline' onClick={handleClick}>Logout</Button>
             </div>
             )}
@@ -56,6 +59,7 @@ function BasicExample() {
               <Link className="me-auto" to={"/signup"}>
                 <Nav.Link href="#signup" className='nav_link'>Signup</Nav.Link>
               </Link>
+             
             </div>
             )}
 

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useBlogContext } from '../hooks/useBlogContext';
 import { Button, Image, Input } from '@chakra-ui/react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Editable, EditableInput, EditablePreview, useEditableControls } from '@chakra-ui/react';
 import { ButtonGroup, Flex, IconButton } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
-import '../pages/Profile.css'
 
 function UserblogComp({ blog }) {
   const { dispatch } = useBlogContext();
@@ -13,6 +12,9 @@ function UserblogComp({ blog }) {
   const [error, setError] = useState(null);
   const [editedTitle, setEditedTitle] = useState(blog.title);
   const [editedDesc, setEditedDesc] = useState(blog.desc);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+  const [image, setImage] = useState(null);
+
 
   function EditableControls({ field }) {
     const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
@@ -71,15 +73,138 @@ function UserblogComp({ blog }) {
     await handleEditSubmit('desc', editedDesc);
   };
 
+  // const handleEditSubmit = async (field, value) => {
+  //   try {
+  //     const response = await fetch(`/api/blogs/${blog._id}`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${user.token}`
+  //       },
+  //       body: JSON.stringify({ [field]: value })
+  //     });
+
+  //     const json = await response.json();
+
+  //     if (response.ok) {
+  //       dispatch({ type: 'UPDATE_BLOG', payload: json });
+  //       console.log(`${field} edit successful`);
+  //     } else {
+  //       console.error(`${field} edit failed:`, json.message);
+  //       // Handle error as needed
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error during ${field} edit:`, error);
+  //     // Handle error as needed
+  //   }
+  // };
+  const imageInputRef = useRef(null);
+
+  const handleEditImageClick = () => {
+    imageInputRef.current.click();
+  };
+  const handleImageChange = (event) => {
+    setImage(event.target.files[0]);
+  };
+  // useEffect(() => {
+  //   if (image.length < 1) return;
+
+  //   const uploadImage = async () => {
+  //     const data = new FormData();
+  //     data.append('file', image[0]);
+  //     data.append('upload_preset', 'BlogRaj');
+  //     data.append('cloud_name', 'dvk41mh9f');
+
+  //     const response = await fetch(
+  //       'https://api.cloudinary.com/v1_1/dvk41mh9f/image/upload',
+  //       {
+  //         method: 'POST',
+  //         body: data,
+  //       }
+  //     );
+  //     const result = await response.json();
+
+  //     setUploadedImageUrl(result.url);
+  //   };
+
+  //   uploadImage();
+  // }, [image]);
+
+  // const handleEditSubmit = async (field, value) => {
+  //   try {
+  //     const updatedData = { [field]: value };
+  
+  //     const response = await fetch(`/api/blogs/${blog._id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${user.token}`
+  //       },
+  //       body: JSON.stringify(updatedData)
+  //     });
+  
+  //     const json = await response.json();
+  
+  //     if (response.ok) {
+  //       dispatch({ type: 'UPDATE_BLOG', payload: json });
+  //       console.log(`${field} edit successful`);
+  //     } else {
+  //       console.error(`${field} edit failed:`, json.message);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error during ${field} edit:`, error);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (!image) return;
+
+    const uploadImage = async () => {
+      const data = new FormData();
+      data.append('file', image);
+      data.append('upload_preset', 'BlogRaj');
+      data.append('cloud_name', 'dvk41mh9f');
+
+      try {
+        const response = await fetch(
+          'https://api.cloudinary.com/v1_1/dvk41mh9f/image/upload',
+          {
+            method: 'POST',
+            body: data,
+          }
+        );
+        const result = await response.json();
+        console.log("img data:", result)
+
+        if (response.ok) {
+          setUploadedImageUrl(result.url);
+          console.log('Image upload successful');
+          await handleEditSubmit('Image', result.url); // Update the image URL in your backend
+        } else {
+          console.error('Image upload failed:', result.message);
+          // Handle error as needed
+        }
+      } catch (error) {
+        console.error('Error during image upload:', error);
+        // Handle error as needed
+      }
+    };
+
+    uploadImage();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
+
   const handleEditSubmit = async (field, value) => {
     try {
+      const updatedData = { [field]: value };
+
       const response = await fetch(`/api/blogs/${blog._id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
         },
-        body: JSON.stringify({ [field]: value })
+        body: JSON.stringify(updatedData)
       });
 
       const json = await response.json();
@@ -95,7 +220,8 @@ function UserblogComp({ blog }) {
       console.error(`Error during ${field} edit:`, error);
       // Handle error as needed
     }
-  };
+  }
+  
 
   const handleClick = async () => {
     if (!user) {
@@ -124,15 +250,37 @@ function UserblogComp({ blog }) {
   return (
     <div>
       <div key={blog._id}>
-        <Image
+    
+        {/* <Image
           src={blog.Image}
           alt='Green double couch with wooden legs'
           borderRadius='lg'
           style={{ height: '229px', width: '333px' }}
         />
-         <Button colorScheme='blue' >
+         <Button colorScheme='blue'  onChange={handleImageChange}>
           edit image
+        </Button> */}
+        <Image
+          // src={uploadedImageUrl}
+          src={blog.Image}
+          alt='Green double couch with wooden legs'
+          borderRadius='lg'
+          style={{ height: '229px', width: '333px' }}
+        />
+        <Button colorScheme='blue' onClick={handleEditImageClick}>
+          Edit Image
         </Button>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          ref={imageInputRef}
+          style={{ display: 'none' }}
+        />
+        {/* <label>
+          image
+        <input value={uploadedImageUrl}></input>
+        </label> */}
 
             
             {/* <label className="addPage-label">
@@ -170,20 +318,17 @@ function UserblogComp({ blog }) {
           onChange={handleDescChange}
           onBlur={handleDescBlur}  // Handle onBlur event for the description
         >
-          <div className='edi-prev'>
-
-          <EditablePreview className='desc-prev' />
-          <Input as={EditableInput} className='desc-inp'/>
-          </div>
+          <EditablePreview />
+          <Input as={EditableInput} />
           <EditableControls field="desc" />
         </Editable>
 
         <Button colorScheme='blue' onClick={handleClick}>
           Delete
         </Button>
-        {/* <Button colorScheme='blue' onClick={() => { setEditedTitle(blog.title); setEditedDesc(blog.desc); }}>
+        <Button colorScheme='blue' onClick={() => { setEditedTitle(blog.title); setEditedDesc(blog.desc); }}>
           Complete Edit
-        </Button> */}
+        </Button>
       </div>
       {error && <div>{error}</div>}
     </div>
