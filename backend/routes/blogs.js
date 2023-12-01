@@ -26,6 +26,8 @@ router.post('/', createBlog);
 router.delete('/:id', deleteBlog);
 
 // Update a blog by ID
-router.patch('/:id', updateBlog);
+router.put('/:id', updateBlog);
+
+
 
 module.exports = router;
