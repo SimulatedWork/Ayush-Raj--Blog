@@ -70,57 +70,86 @@ const deleteBlog = async (req, res) => {
 
 //upatate a blog
 const updateBlog = async (req, res) => {
-  const { id } = req.params; //question
+  const { id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "no such blog" });
   }
-  const blog = await Blog.findOneAndUpdate(
-    { _id: id },
-    {
-      ...req.body,
-    }
-  );
-  if (!blog) {
-    return res.status(404).json({ error: "no such blog" });
+
+  // Exclude 'postedBy' from the update if it's present in the request body
+  const updateFields = { ...req.body };
+  if (updateFields.postedBy) {
+    delete updateFields.postedBy;
   }
-  res.status(200).json(blog);
+
+  try {
+    const blog = await Blog.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: updateFields,
+      },
+      { new: true }
+    );
+
+    if (!blog) {
+      return res.status(404).json({ error: "no such blog" });
+    }
+
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
 
 // like a blog
 
 const likeBlog = async (req, res) => {
   const { id } = req.params;
-  const blog = Blog.findByIdAndUpdate({ likes: [...likes, id] });
-  // .exec((err, result) => {
-  //   if (err) {
-  //     return res.status(422).json({ error: err });
-  //   } else {
-  //     res.json(result);
-  //   }
-  // });
-  return res.status(200).json(blog);
+  try {
+    const blog = await Blog.findById(id);
+
+    // Check if the user has already liked the blog
+    const alreadyLiked = blog.likes.includes(req.user._id);
+
+    if (alreadyLiked) {
+      // User already liked, unlike the blog
+      blog.likes.pull(req.user._id);
+    } else {
+      // User hasn't liked, like the blog
+      blog.likes.push(req.user._id);
+    }
+
+    await blog.save();
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Unlike Blog
-const unlikeBlog = async (req, res) => {
-  blog
-    .findByIdAndUpdate(
-      req.body.blogId,
-      {
-        $pull: { likes: req.user._id },
-      },
-      {
-        new: true,
-      }
-    )
-    .exec((err, result) => {
-      if (err) {
-        return res.status(422).json({ error: err });
-      } else {
-        res.json(result);
-      }
-    });
+const dislikeBlog = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const blog = await Blog.findById(id);
+
+    // Check if the user has already disliked the blog
+    const alreadyDisliked = blog.dislikes.includes(req.user._id);
+
+    if (alreadyDisliked) {
+      // User already disliked, remove the dislike
+      blog.dislikes.pull(req.user._id);
+    } else {
+      // User hasn't disliked, add the dislike
+      blog.dislikes.push(req.user._id);
+    }
+
+    await blog.save();
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
 
 const comment = async (req, res) => {
   const { blogId, text } = req.body;
@@ -139,37 +168,14 @@ const comment = async (req, res) => {
       { new: true }
     )
       .populate("comments.postedBy", "_id name")
-      .populate("postedBy", "_id name");
+      .populate("likes", "_id name") // Add this line to populate likes
+      .populate("comments.postedBy", "_id name");
 
     res.json(updatedBlog);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-const uncomment = (req, res) => {
-  let comment = req.body.comment;
-
-  Blog.findByIdAndUpdate(
-    req.body.blogId,
-    {
-      $pull: { comments: { _id: comment._id } },
-    },
-    {
-      new: true,
-    }
-  )
-    .populate("comments.postedBy", "_id name")
-    .populate("postedBy", "_id name")
-    .exec((err, result) => {
-      if (err) {
-        return res.status(422).json({ error: err });
-      } else {
-        res.json(result);
-      }
-    });
-};
-
 module.exports = {
   createBlog,
   getBlogs,
@@ -177,6 +183,6 @@ module.exports = {
   updateBlog,
   deleteBlog,
   likeBlog,
-  unlikeBlog,
+  dislikeBlog,
   comment,
 };

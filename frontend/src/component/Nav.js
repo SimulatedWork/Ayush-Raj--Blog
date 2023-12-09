@@ -15,7 +15,7 @@ function BasicExample() {
 
   const handleClick = () => {
     logout();
-  };7
+  };
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>

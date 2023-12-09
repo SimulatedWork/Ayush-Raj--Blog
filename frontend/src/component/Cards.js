@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardBody, CardFooter } from "@chakra-ui/react";
+import { useAuthContext } from "../hooks/useAuthContext";
 import {
   ThumbUpAltOutlined,
   ThumbUp,
@@ -9,60 +10,56 @@ import {
 import { Image, Stack, Heading, Text, Button } from "@chakra-ui/react";
 
 const Blog = ({ blog, handleExpand }) => {
-  const [likes, setLikes] = useState(blog.likes || 0);
-  const [isLiked, setIsLiked] = useState(false);
+  const {user } = useAuthContext();
+  const [likes, setLikes] = useState(blog.likes.length);
+  const [isLiked, setIsLiked] = useState(
+    user ? blog.likes.includes(user._id) : false
+  );
   const [isDisliked, setIsDisliked] = useState(false);
   const [comments, setComments] = useState(blog.comments || []);
   const [newComment, setNewComment] = useState("");
 
   const handleLike = async (id) => {
-    // Assume your API call is successful and you've updated the likes count
-    setLikes(likes + 1);
-    setIsLiked(true);
-
-    // If the user has already disliked, reset the dislike state
-    if (isDisliked) {
-      setIsDisliked(false);
-    }
-
-    // Make a request to the server to update the like status
     try {
       const response = await fetch(`/api/blogs/like/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
       });
 
-      const json = await response.json();
-      // Handle the response as needed
+      const updatedBlog = await response.json();
+
+      setLikes(updatedBlog.likes.length);
+      setIsLiked(!isLiked);
+
+      if (isDisliked) {
+        setIsDisliked(false);
+      }
     } catch (error) {
       console.error("Error liking the blog:", error);
     }
   };
 
   const handleDislike = async (id) => {
-    // Assume your API call is successful and you've updated the likes count
-    setLikes(likes - 1);
-    setIsDisliked(true);
-
-    // If the user has already liked, reset the like state
-    if (isLiked) {
-      setIsLiked(false);
-    }
-
-    // Make a request to the server to update the dislike status
     try {
       const response = await fetch(`/api/blogs/dislike/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
-        // Add any necessary request body
       });
 
-      const json = await response.json();
-      // Handle the response as needed
+      const updatedBlog = await response.json();
+
+      setLikes(updatedBlog.likes.length);
+      setIsDisliked(!isDisliked);
+
+      if (isLiked) {
+        setIsLiked(false);
+      }
     } catch (error) {
       console.error("Error disliking the blog:", error);
     }
@@ -74,37 +71,34 @@ const Blog = ({ blog, handleExpand }) => {
       return;
     }
 
-    // Make a request to the server to add a new comment
     try {
       const response = await fetch(`/api/blogs/comment/${id}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          comment: newComment,
+          blogId: id,
+          text: newComment,
         }),
       });
 
-      const json = await response.json();
+      const updatedBlog = await response.json();
+
       if (response.ok) {
-        setComments([...comments, json.newComment]);
+        setComments([...updatedBlog.comments]);
         setNewComment("");
+        alert("Comment added Successfully!")
       } else {
-        console.error("Error adding comment:", json.error);
+        console.error("Error adding comment:", updatedBlog.error);
       }
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  const truncateContent = (content, maxLength) => {
-    return content.length > maxLength
-      ? content.substring(0, maxLength) + "..."
-      : content;
-  };
-
-  // Rest of your component code...
 
   return (
     <div key={blog.id} style={{ margin: "20px" }}>
@@ -120,13 +114,14 @@ const Blog = ({ blog, handleExpand }) => {
             />
           </div>
 
-          <Stack mt='6' spacing='3'>
-        <Heading size='md'>{blog.title}</Heading>
-        <Text>
-          {blog.desc.length > 220 ? `${blog.desc.slice(0, 220)}...` : blog.desc}
-        </Text>
-      </Stack>
-
+          <Stack mt="6" spacing="3">
+            <Heading size="md">{blog.title}</Heading>
+            <Text>
+              {blog.desc.length > 220
+                ? `${blog.desc.slice(0, 220)}...`
+                : blog.desc}
+            </Text>
+          </Stack>
         </CardBody>
         <CardFooter>
           <Button
@@ -171,6 +166,8 @@ const Blog = ({ blog, handleExpand }) => {
             backgroundColor: "#f5f5f5",
             padding: "20px",
           }}
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
         />
         <Button
           variant="solid"

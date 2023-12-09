@@ -6,13 +6,13 @@ const {
   updateBlog,
   deleteBlog,
   likeBlog,
-  unlikeBlog,
-  comment
+  dislikeBlog,
+  comment,
 } = require("../controller/blogController");
 
 const requireAuth = require("../middleware/requireAuth");
-const { default: mongoose } = require("mongoose");
 const router = express.Router();
+
 // Get all blogs
 router.get("/", getBlogs);
 
@@ -28,42 +28,16 @@ router.post("/", createBlog);
 router.delete("/:id", deleteBlog);
 
 // Update a blog by ID
-router.put('/:id', updateBlog);
+router.patch("/:id", updateBlog);
 
-
-
-// likes Resquest
-router.put("/like", likeBlog);
+// Like Request
+router.put("/like/:id", likeBlog); // Updated route to capture blog ID from URL parameter
 
 // Unlike Request
-router.put("/unlike", unlikeBlog);
+router.put("/dislike/:id", dislikeBlog); // Updated route to capture blog ID from URL parameter
 
 // Comment Request
-// router.put("/comment", requireAuth, (req, res) => {
-//   const comment = {
-//     text: req.body.text,
-//     postedBy: req.user._id,
-//   };
-//   blog
-//     .findByIdAndUpdate(
-//       req.body.blogId,
-//       {
-//         $push: { comment: comment },
-//       },
-//       {
-//         new: true,
-//       }
-//     )
-//     .populate("comment.postedBy", "_id name")
-//     .exec((err, result) => {
-//       if (err) {
-//         return res.status(422).json({ error: err });
-//       } else {
-//         res.json(result);
-//       }
-//     });
-// });
+router.put("/comment/:id", comment); // Updated route to capture blog ID from URL parameter
+router.put("/uncomment/:id", comment); // Updated route to capture blog ID from URL parameter
 
-router.put("/comment", comment);
-router.put("/uncomment", comment);
 module.exports = router;

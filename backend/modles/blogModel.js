@@ -28,13 +28,27 @@ const blogSchema = new Schema(
       type: String,
       required: true,
     },
-    likes: [{ type: objectId, ref: "User" }], // Correct likes array type
-    comments: [
-      {
-        text: String,
-        postedBy: { type: objectId, default: "Unknown", ref: "User" },
+    likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  dislikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  comments: [
+    {
+      text: String,
+      postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
-    ],
+    },
+  ],
   },
   { timestamps: true }
 );
