@@ -8,10 +8,9 @@ const Profile = () => {
   return (
 
    <>
-   <ChakraProvider>
+   <ChakraProvider> 
       <Blogfrom/>
       <UserBlog/>
-
    </ChakraProvider>
    </>
   )

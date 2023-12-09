@@ -132,9 +132,7 @@ function UserblogComp({ blog }) {
         />
          <Button colorScheme='blue' >
           edit image
-        </Button>
-
-            
+        </Button>                
             {/* <label className="addPage-label">
               Blog image:
               <input
