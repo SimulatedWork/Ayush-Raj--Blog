@@ -1,12 +1,13 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { Button } from "@chakra-ui/react";
-import "../index.css";
-import { Link } from "react-router-dom";
-import { useLogout } from "../hooks/useLogout";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { Tooltip } from "@chakra-ui/react";
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { Button } from '@chakra-ui/react'
+import '../index.css'
+import { Link } from 'react-router-dom';
+import { useLogout } from '../hooks/useLogout';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { Tooltip } from '@chakra-ui/react'
+import { Avatar } from '@chakra-ui/react'
 
 function BasicExample() {
   const { logout } = useLogout();
@@ -46,26 +47,23 @@ function BasicExample() {
             )}
 
             {user && (
-              <div>
-                <span>{user.email}</span>
-                <Button
-                  colorScheme="blue"
-                  variant="outline"
-                  onClick={handleClick}
-                >
-                  Logout
-                </Button>
-              </div>
+            <div>
+                <span>
+               <Avatar name={user.email.split('@')[0]} src='https://bit.ly/broken-link' />
+                </span>
+                <Button colorScheme='blue' variant='outline' onClick={handleClick}>Logout</Button>
+            </div>
             )}
             {!user && (
-              <div>
-                <Link className="me-auto" to={"/login"}>
-                  Login
-                </Link>
-                <Link className="me-auto" to={"/signup"}>
-                  Signup
-                </Link>
-              </div>
+            <div>
+              <Link className="me-auto" to={"/login"}>
+                <Nav.Link href="#login" className='nav_link'>Login</Nav.Link>
+              </Link>
+              <Link className="me-auto" to={"/signup"}>
+                <Nav.Link href="#signup" className='nav_link'>Signup</Nav.Link>
+              </Link>
+             
+            </div>
             )}
           </Nav>
         </Navbar.Collapse>

@@ -45,6 +45,7 @@ padding: 1rem;
 }
 .desc-prev {
     width: 90%;
+    font-size: small !important;
 }
 .desc-inp{
     min-height: 210px;
@@ -57,7 +58,30 @@ border-radius: 10px;
 margin: 20px;
 
 }
-
+.title-inp{
+    width: 35%;
+}
+.edit-form{
+    display: flex;
+    align-items: center;
+    width: 100vw;
+}
+.edit-div{
+    display: flex;
+    flex-direction: column;
+}
+.title-edit{
+    display: flex;
+    align-items: center;
+    margin: 20px;
+    border:  2px solid rgb(0, 157, 255);
+    border-radius: 10px;
+padding-left: 40px;
+    width: 40%;
+}
+.edit-div-outer{
+    width: 100%;
+}
 @media (max-width:770px) {
     .input-form{
         display: flex;

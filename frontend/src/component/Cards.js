@@ -120,10 +120,13 @@ const Blog = ({ blog, handleExpand }) => {
             />
           </div>
 
-          <Stack mt="6" spacing="3">
-            <Heading size="md">{blog.title}</Heading>
-            <Text>{truncateContent(blog.desc, 150)}</Text>
-          </Stack>
+          <Stack mt='6' spacing='3'>
+        <Heading size='md'>{blog.title}</Heading>
+        <Text>
+          {blog.desc.length > 220 ? `${blog.desc.slice(0, 220)}...` : blog.desc}
+        </Text>
+      </Stack>
+
         </CardBody>
         <CardFooter>
           <Button
