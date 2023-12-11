@@ -10,38 +10,41 @@ import { Tooltip } from '@chakra-ui/react'
 import { Avatar } from '@chakra-ui/react'
 
 function BasicExample() {
-  const {logout}= useLogout()
-  const {user} = useAuthContext()
+  const { logout } = useLogout();
+  const { user } = useAuthContext();
 
-
-  const handleClick=()=>{
-    logout()
-  }
+  const handleClick = () => {
+    logout();
+  };
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto" style={{ width: "40%" }}>
             <Link className="me-auto" to={"/"}>
-              <Nav.Link href="#home" className='nav_link'>Home</Nav.Link>
+              Home
             </Link>
             {user ? (
               // If user exists, render Link without Tooltip
               <Link className="me-auto" to={"/profile"}>
-                <Nav.Link href="#profile" className='nav_link'>Profile</Nav.Link>
+                Profile
               </Link>
             ) : (
               // If user doesn't exist, render Link with Tooltip
-              <Tooltip hasArrow label='Login/Signup to Access' bg='gray.300' color='black'>
+              <Tooltip
+                hasArrow
+                label="Login/Signup to Access"
+                bg="gray.300"
+                color="black"
+                
+              >
                 <Link className="me-auto" to={"/profile"}>
-                  <Nav.Link href="#profile" className='nav_link'>Profile</Nav.Link>
+                  Profile
                 </Link>
               </Tooltip>
             )}
-
-
 
             {user && (
             <div>
@@ -62,9 +65,6 @@ function BasicExample() {
              
             </div>
             )}
-
-
-          
           </Nav>
         </Navbar.Collapse>
       </Container>

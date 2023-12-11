@@ -1,8 +1,8 @@
-.cards-div{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 10px 5vw 10px 5vw;
+.cards-div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 10px 5vw 10px 5vw;
 }
 /* Add this CSS to your stylesheets */
 
